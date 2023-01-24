@@ -551,9 +551,20 @@ public class ReactAccessibilityDelegate extends ExploreByTouchHelper {
       return;
     }
 
+    final Rect boundsInParent;
+    try {
+      boundsInParent = getBoundsInParent(accessibleTextSpan);
+    } catch (IndexOutOfBoundsException e) {
+      // This can happen if the text is updated while the accessibility focus is on it.
+      // In this case, we just return the entire view bounds.
+      node.setContentDescription("");
+      node.setBoundsInParent(new Rect(0, 0, 1, 1));
+      return;
+    }
+
     node.setContentDescription(accessibleTextSpan.description);
     node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
-    node.setBoundsInParent(getBoundsInParent(accessibleTextSpan));
+    node.setBoundsInParent(boundsInParent);
     node.setRoleDescription(mView.getResources().getString(R.string.link_description));
     node.setClassName(AccessibilityRole.getValue(AccessibilityRole.BUTTON));
   }
