@@ -35,6 +35,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.ReactConstants;
+import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.ReactCompoundView;
 import com.facebook.react.uimanager.UIManagerModule;
@@ -45,6 +46,7 @@ import com.facebook.react.views.view.ReactViewBackgroundManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 
 public class ReactTextView extends AppCompatTextView implements ReactCompoundView {
 
@@ -147,8 +149,18 @@ public class ReactTextView extends AppCompatTextView implements ReactCompoundVie
     int textViewWidth = textViewRight - textViewLeft;
     int textViewHeight = textViewBottom - textViewTop;
 
+    if (placeholders.length > 0) {
+      FLog.e(ReactConstants.TAG, "KNUDDELS: Placeholders " + placeholders.length + " " + text.toString());
+    }
+
+    int i = 0;
     for (TextInlineViewPlaceholderSpan placeholder : placeholders) {
-      View child = uiManager.resolveView(placeholder.getReactTag());
+      View child;
+      try {
+          child = uiManager.resolveView(placeholder.getReactTag());
+      } catch (IllegalViewOperationException e) {
+          continue;
+      }
 
       int start = text.getSpanStart(placeholder);
       int line = layout.getLineForOffset(start);
