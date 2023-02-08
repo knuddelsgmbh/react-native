@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-
 public class ReactTextView extends AppCompatTextView implements ReactCompoundView {
 
   private static final ViewGroup.LayoutParams EMPTY_LAYOUT_PARAMS =
@@ -149,11 +148,6 @@ public class ReactTextView extends AppCompatTextView implements ReactCompoundVie
     int textViewWidth = textViewRight - textViewLeft;
     int textViewHeight = textViewBottom - textViewTop;
 
-    if (placeholders.length > 0) {
-      FLog.e(ReactConstants.TAG, "KNUDDELS: Placeholders " + placeholders.length + " " + text.toString());
-    }
-
-    int i = 0;
     for (TextInlineViewPlaceholderSpan placeholder : placeholders) {
       View child;
       try {
